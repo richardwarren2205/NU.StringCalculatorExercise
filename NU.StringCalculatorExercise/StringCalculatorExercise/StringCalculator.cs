@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace StringCalculatorExercise
@@ -8,7 +9,10 @@ namespace StringCalculatorExercise
     /// </summary>
     public class StringCalculator
     {
-        private readonly char[] supportedDelimiters = new char[2] { ',', '\n' };
+        private readonly char[] defaultDelimiters = new char[2] { ',', '\n' };
+
+        private const string delimiterStartSyntax = "//";
+        private const char delimiterEndSyntax = '\n';        
 
         /// <summary>
         /// A method to add a collection of numbers from a string representation
@@ -20,9 +24,26 @@ namespace StringCalculatorExercise
             if (string.IsNullOrEmpty(numbers))
                 return 0;
 
-            var splitNumbers = numbers.Split(supportedDelimiters);
+            string[] splitNumbers;
 
-            if (splitNumbers.Contains(string.Empty))
+            if (numbers.StartsWith(delimiterStartSyntax))
+            {
+                numbers = numbers.Replace(delimiterStartSyntax, string.Empty);
+
+                var parts = numbers.Split(delimiterEndSyntax);
+
+                if (parts.Length == 2)
+                {
+                    var customDelimiter = Convert.ToChar(parts[0]);
+                    splitNumbers = parts[1].Split(new char[1] { customDelimiter });
+                }                    
+                else
+                    throw new ArgumentException();                
+            }
+            else
+                splitNumbers = numbers.Split(defaultDelimiters);
+
+            if (splitNumbers.Contains(string.Empty) || !splitNumbers.All(s => s.All(char.IsDigit)))
                 throw new ArgumentException();
 
             return splitNumbers.Sum(n => int.Parse(n));

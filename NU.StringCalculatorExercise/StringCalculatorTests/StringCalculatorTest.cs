@@ -1,4 +1,5 @@
 using StringCalculatorExercise;
+using StringCalculatorExercise.Exceptions;
 using System;
 using Xunit;
 
@@ -37,6 +38,16 @@ namespace StringCalculatorTests
         public void StringCalculator_InvalidInput(string input)
         {
             Assert.Throws<ArgumentException>(() => _stringCalculator.Add(input));
+        }
+
+        [Theory]
+        [InlineData("-1,2,3", "Negatives not allowed (-1)")] // Step 5
+        [InlineData("-1,5,-7", "Negatives not allowed (-1,-7)")] // Step 5
+        public void StringCalculator_NegativeNumberException(string input, string expectedMessage)
+        {
+            var exception = Assert.Throws<NegativeNumberException>(() => _stringCalculator.Add(input));
+            Assert.Equal(expectedMessage, exception.Message);
+
         }
     }
 }
