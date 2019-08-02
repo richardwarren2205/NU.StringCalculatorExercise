@@ -13,7 +13,8 @@ namespace StringCalculatorExercise
         private readonly char[] defaultDelimiters = new char[2] { ',', '\n' };
 
         private const string delimiterStartSyntax = "//";
-        private const char delimiterEndSyntax = '\n';        
+        private const char delimiterEndSyntax = '\n';
+        private const int maxNumberToInclude = 1000;
 
         /// <summary>
         /// A method to add a collection of numbers from a string representation
@@ -51,7 +52,7 @@ namespace StringCalculatorExercise
             if (negativeNumbers.Any())
                 throw new NegativeNumberException(negativeNumbers);
 
-            return integers.Sum();
+            return integers.Where(i => i < maxNumberToInclude).Sum();
         }
 
         private List<int> ParseNumberString(string[] splitNumbers)

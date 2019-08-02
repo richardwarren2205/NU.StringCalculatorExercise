@@ -24,8 +24,11 @@ namespace StringCalculatorTests
         [InlineData("1,2\n3", 6)] // Step 3
         [InlineData("//;\n1;2", 3)] // Step 4
         [InlineData("//#\n3#5#2", 10)] // Step 4
-        [InlineData("2,1001", 2)] // Step 5
-        [InlineData("2,1001,5", 7)] // Step 5
+        [InlineData("2,1001", 2)] // Step 6
+        [InlineData("2,1001,5", 7)] // Step 6
+        [InlineData("//[***]\n1***2***3", 6)] // Step 7
+        [InlineData("//[###]\n5###7###9", 21)] // Step 7
+        [InlineData("//[*#$]\n5*#$7*#$9", 21)] // Step 7
         public void StringCalculator_ValidInput(string input, int expected)
         {
             var count = _stringCalculator.Add(input);
