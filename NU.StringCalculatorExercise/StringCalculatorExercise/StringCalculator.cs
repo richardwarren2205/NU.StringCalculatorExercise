@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StringCalculatorExercise.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -36,17 +37,33 @@ namespace StringCalculatorExercise
                 {
                     var customDelimiter = Convert.ToChar(parts[0]);
                     splitNumbers = parts[1].Split(new char[1] { customDelimiter });
-                }                    
+                }
                 else
-                    throw new ArgumentException();                
+                    throw new ArgumentException();
             }
             else
                 splitNumbers = numbers.Split(defaultDelimiters);
 
-            if (splitNumbers.Contains(string.Empty) || !splitNumbers.All(s => s.All(char.IsDigit)))
-                throw new ArgumentException();
+            var integers = ParseNumberString(splitNumbers);
 
-            return splitNumbers.Sum(n => int.Parse(n));
+            var negativeNumbers = integers.Where(i => i < 0).ToList();
+
+            if (negativeNumbers.Any())
+                throw new NegativeNumberException(negativeNumbers);
+
+            return integers.Sum();
+        }
+
+        private List<int> ParseNumberString(string[] splitNumbers)
+        {
+            try
+            {
+                return Array.ConvertAll(splitNumbers, Int32.Parse).ToList();
+            }
+            catch
+            {
+                throw new ArgumentException();
+            }
         }
     }
 }
