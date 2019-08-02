@@ -8,6 +8,8 @@ namespace StringCalculatorExercise
     /// </summary>
     public class StringCalculator
     {
+        private readonly char[] supportedDelimiters = new char[2] { ',', '\n' };
+
         /// <summary>
         /// A method to add a collection of numbers from a string representation
         /// </summary>
@@ -18,9 +20,12 @@ namespace StringCalculatorExercise
             if (string.IsNullOrEmpty(numbers))
                 return 0;
 
-            var splitNumbers = numbers.Split(',').Select(n => int.Parse(n)).ToList();
+            var splitNumbers = numbers.Split(supportedDelimiters);
 
-            return splitNumbers.Sum();
+            if (splitNumbers.Contains(string.Empty))
+                throw new ArgumentException();
+
+            return splitNumbers.Sum(n => int.Parse(n));
         }
     }
 }
