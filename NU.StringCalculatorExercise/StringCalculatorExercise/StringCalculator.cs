@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace StringCalculatorExercise
 {
@@ -14,7 +15,15 @@ namespace StringCalculatorExercise
         /// <returns>The sum of the numbers</returns>
         public int Add(string numbers)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(numbers))
+                return 0;
+
+            var splitNumbers = numbers.Split(',').Select(n => int.Parse(n)).ToList();
+
+            if (splitNumbers.Count > 2)
+                throw new ArgumentOutOfRangeException();
+
+            return splitNumbers.Sum();
         }
     }
 }
