@@ -20,9 +20,6 @@ namespace StringCalculatorExercise
 
             var splitNumbers = numbers.Split(',').Select(n => int.Parse(n)).ToList();
 
-            if (splitNumbers.Count > 2)
-                throw new ArgumentOutOfRangeException();
-
             return splitNumbers.Sum();
         }
     }

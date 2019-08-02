@@ -14,30 +14,26 @@ namespace StringCalculatorTests
         }
 
         [Theory]
-        [InlineData("", 0)]
-        [InlineData(null, 0)]
-        [InlineData("1", 1)]
-        [InlineData("1,2", 3)]
-        [InlineData("2,9,3", 14)]
-        [InlineData("1,2,3,4,5", 15)]        
-        public void Step1Test_ValidInput(string input, int expected)
+        [InlineData("", 0)] //Step 1
+        [InlineData(null, 0)] //Step 1
+        [InlineData("1", 1)] //Step 1
+        [InlineData("1,2", 3)] //Step 1
+        [InlineData("1,2,3,4,5", 15)] //Step 2
+        [InlineData("1\n2,3", 6)] //Step 3
+        [InlineData("1,2\n3", 6)] //Step 3
+        public void StringCalculator_ValidInput(string input, int expected)
         {
             var count = _stringCalculator.Add(input);
 
             Assert.Equal(count, expected);
         }
 
-        // No longer required after adding Step 2 functionality
-        //[Fact]
-        //public void Step1Test_Invalid()
-        //{
-        //    var input = "1,2,3,4";
-
-        //    Assert.Throws<ArgumentOutOfRangeException>(() => _stringCalculator.Add(input));
-        //}
-
-
-
-
+        [Theory]
+        [InlineData("1,\n")] // Step 3
+        [InlineData("\n,3,1")] // Step 3
+        public void StringCalculator_InvalidInput(string input)
+        {
+            Assert.Throws<ArgumentException>(() => _stringCalculator.Add(input));
+        }
     }
 }
