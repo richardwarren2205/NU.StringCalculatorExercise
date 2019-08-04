@@ -35,6 +35,7 @@ namespace StringCalculatorTests
         [InlineData("//[*][%]\n1*2%3*4", 10)] // Step 8
         [InlineData("//[***][%%%]\n1***2%%%3", 6)] // Step 9
         [InlineData("//[***][%%][####]\n1***2%%3####6", 12)] // Step 9
+        [InlineData("//[***][//]\n1***2//4", 7)] // Step 9
         public void StringCalculator_ValidInput(string input, int expected)
         {
             var count = _stringCalculator.Add(input);

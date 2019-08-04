@@ -29,13 +29,13 @@ namespace StringCalculatorExercise
             string[] splitNumbers;
 
             if (numbers.StartsWith(customDelimiterStart))
-                splitNumbers = SplitInputStringWithCustomDelimiter(numbers);
+                splitNumbers = SplitInputStringWithCustomDelimiters(numbers);
             else
                 splitNumbers = numbers.Split(defaultDelimiters);
 
             var integers = ParseNumberString(splitNumbers);
 
-            var negativeNumbers = integers.Where(i => i < 0).ToList();
+            var negativeNumbers = integers.Where(i => i < 0);
 
             if (negativeNumbers.Any())
                 throw new NegativeNumberException(negativeNumbers);
@@ -43,20 +43,25 @@ namespace StringCalculatorExercise
             return integers.Where(i => i <= maxNumberToInclude).Sum();
         }
 
-        private string[] SplitInputStringWithCustomDelimiter(string numbers)
+        private string[] SplitInputStringWithCustomDelimiters(string numbers)
         {
-            numbers = numbers.Replace(customDelimiterStart, string.Empty);
+            numbers = numbers.Remove(0, customDelimiterStart.Length);
 
             var inputParts = numbers.Split(customDelimiterEnd);
 
             if (inputParts.Length == 2)
             {
-                var customDelimiter = inputParts[0];
+                string[] customDelimiters;
 
-                if (customDelimiter.Length > 2 && customDelimiter.StartsWith('[') && customDelimiter.EndsWith(']'))
-                    customDelimiter = inputParts[0].Substring(1, inputParts[0].Length - 2);
+                if (inputParts[0].StartsWith('[') && inputParts[0].EndsWith(']'))
+                {
+                    var customDelimiterSection = inputParts[0].Substring(1, inputParts[0].Length - 2);
+                    customDelimiters = customDelimiterSection.Split("][");
+                }
+                else
+                    customDelimiters = new string[1] { inputParts[0] };
 
-                return inputParts[1].Split(new string[1] { customDelimiter }, StringSplitOptions.None);
+                return inputParts[1].Split(customDelimiters, StringSplitOptions.None);
             }
             else
                 throw new ArgumentException();
