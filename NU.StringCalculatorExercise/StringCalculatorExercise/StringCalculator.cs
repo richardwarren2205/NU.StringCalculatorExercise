@@ -12,8 +12,8 @@ namespace StringCalculatorExercise
     {
         private readonly char[] defaultDelimiters = new char[2] { ',', '\n' };
 
-        private const string customDelimiterStart = "//";
-        private const char customDelimiterEnd = '\n';
+        private const string delimiterStartSyntax = "//";
+        private const char delimiterEndSyntax = '\n';
         private const int maxNumberToInclude = 1000;
 
         /// <summary>
@@ -28,8 +28,20 @@ namespace StringCalculatorExercise
 
             string[] splitNumbers;
 
-            if (numbers.StartsWith(customDelimiterStart))
-                splitNumbers = SplitInputStringWithCustomDelimiter(numbers);
+            if (numbers.StartsWith(delimiterStartSyntax))
+            {
+                numbers = numbers.Replace(delimiterStartSyntax, string.Empty);
+
+                var parts = numbers.Split(delimiterEndSyntax);
+
+                if (parts.Length == 2)
+                {
+                    var customDelimiter = Convert.ToChar(parts[0]);
+                    splitNumbers = parts[1].Split(new char[1] { customDelimiter });
+                }
+                else
+                    throw new ArgumentException();
+            }
             else
                 splitNumbers = numbers.Split(defaultDelimiters);
 
@@ -40,26 +52,7 @@ namespace StringCalculatorExercise
             if (negativeNumbers.Any())
                 throw new NegativeNumberException(negativeNumbers);
 
-            return integers.Where(i => i <= maxNumberToInclude).Sum();
-        }
-
-        private string[] SplitInputStringWithCustomDelimiter(string numbers)
-        {
-            numbers = numbers.Replace(customDelimiterStart, string.Empty);
-
-            var inputParts = numbers.Split(customDelimiterEnd);
-
-            if (inputParts.Length == 2)
-            {
-                var customDelimiter = inputParts[0];
-
-                if (customDelimiter.Length > 2 && customDelimiter.StartsWith('[') && customDelimiter.EndsWith(']'))
-                    customDelimiter = inputParts[0].Substring(1, inputParts[0].Length - 2);
-
-                return inputParts[1].Split(new string[1] { customDelimiter }, StringSplitOptions.None);
-            }
-            else
-                throw new ArgumentException();
+            return integers.Where(i => i < maxNumberToInclude).Sum();
         }
 
         private List<int> ParseNumberString(string[] splitNumbers)
